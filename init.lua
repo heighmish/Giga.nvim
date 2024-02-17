@@ -160,7 +160,7 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = false,
-        theme = 'onedark',
+        theme = 'auto',
         component_separators = '|',
         section_separators = '',
       },
@@ -382,6 +382,10 @@ vim.defer_fn(function()
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
+    sync_install = false,
+
+    ignore_install = {},
+    modules = {},
 
     highlight = { enable = true },
     indent = { enable = true },
@@ -459,7 +463,9 @@ local on_attach = function(_, bufnr)
   end
 
   nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
-  nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
+  nmap('<leader>ca', function()
+    vim.lsp.buf.code_action { context = { only = { 'quickfix', 'refactor', 'source' } } }
+  end, '[C]ode [A]ction')
 
   nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
@@ -513,6 +519,7 @@ local servers = {
   astro = {},
   clangd = {},
   gopls = {},
+  omnisharp = {},
   pyright = {},
   rust_analyzer = {},
   tsserver = {},
@@ -525,7 +532,6 @@ local servers = {
       -- diagnostics = { disable = { 'missing-fields' } },
     },
   },
-  omnisharp = {},
 }
 
 -- Setup neovim lua configuration
