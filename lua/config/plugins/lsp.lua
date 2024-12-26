@@ -36,6 +36,21 @@ return {
         end
       }
 
+      local nmap = function(keys, func, desc)
+        if desc then
+          desc = 'LSP: ' .. desc
+        end
+        vim.keymap.set('n', keys, func, { desc = desc })
+      end
+
+      local builtin = require('telescope.builtin')
+      nmap('gd', builtin.lsp_definitions, '[G]oto [D]efinition')
+      nmap('gr', builtin.lsp_references, '[G]oto [R]eferences')
+      nmap('gI', builtin.lsp_implementations, '[G]oto [I]mplementation')
+      nmap('<leader>D', builtin.lsp_type_definitions, 'Type [D]efinition')
+      nmap('<leader>ds', builtin.lsp_document_symbols, '[D]ocument [S]ymbols')
+      nmap('<leader>ws', builtin.lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
+
       vim.api.nvim_create_autocmd('LspAttach', {
         callback = function(args)
           local c = vim.lsp.get_client_by_id(args.data.client_id)
